@@ -23,8 +23,6 @@ New Features:
 Installing:
 
 ```
-#!shell
-
 apt-get install git -y
 
 ```
@@ -32,8 +30,6 @@ apt-get install git -y
 Clone Repository
 
 ```
-#!shell
-
 git clone https://github.com/ndmsolutions/LEMP-Stack.git
 
 ```
@@ -42,8 +38,6 @@ CD to Directory and Change permission
 
 
 ```
-#!shell
-
 cd LEMP-Stack
 chmod 700 *.sh
 chmod 700 options.conf
@@ -52,16 +46,12 @@ chmod 700 options.conf
 Edit options to enter server IP, MySQL password, MySQL Version etc.
 
 ```
-#!shell
-
 nano options.conf
 ```
 
 Install LAMP.
 
 ```
-#!shell
-
 ./install.sh
 
 ```
@@ -70,8 +60,6 @@ When install is completed you will find user and password generated during insta
 
 
 ```
-#!shell
-
 cat info_install.txt
 #### User with Sudo Access #####
 User: sysadmin
@@ -81,8 +69,6 @@ Pass: 074VohJv9P6tx4hcFG8AzT2o
 Install FTP and PhpMyAdmin
 
 ```
-#!shell
-
 ./setup.sh ftp
 
 ./setup.sh dbgui
@@ -101,8 +87,6 @@ SERVER_IP from options.conf will be used for "pasv_address=$SERVER_IP"
 Add User for Domain to be started.
 
 ```
-#!shell
-
 ./add_domain_user.sh myuser
 
 ################# User Info ######################
@@ -117,8 +101,6 @@ Add Domain to user we created.
 
 
 ```
-#!shell
-
 ./domain.sh add myuser mydomain.com
 
 php5.6-fpm stop/waiting
@@ -133,8 +115,6 @@ Stats update daily. Allow 24H before viewing stats or you will be greeted with a
 Enable PhpMyAdmin if installed.
 
 ```
-#!shell
-
 ./domain.sh dbgui on 
 
 '/home/myuser/domains/mydomain.com/public_html/dbgui' -> '/usr/local/share/phpmyadmin/'
@@ -144,8 +124,6 @@ PhpMyAdmin enabled.
 Disable PhpMyAdmin
 
 ```
-#!shell
-
 ./domain.sh dbgui off
 
 removed '/home/myuser/domains/mydomain.com/public_html/dbgui'
@@ -155,8 +133,6 @@ PhpMyAdmin disabled. If "removed" messages do not appear, it has been previously
 Create MySQL User and Database.
 
 ```
-#!shell
-
 ./database.sh add myusersql
 
  ################# DB Info ######################
@@ -170,8 +146,6 @@ Create MySQL User and Database.
 Drop MySQL User and Database.
 
 ```
-#!shell
-
 ./database.sh drop myusersql
 
  ################# DB Info ######################
@@ -183,8 +157,6 @@ Manage Swap Memory, added this to work on DigitalOcean as was Issue for low memo
 
 
 ```
-#!shell
-
 ADD_SWAP=yes
 SWAP_SIZE=2G
 ```
@@ -194,14 +166,10 @@ Users wish SSL sites make sure you generate DHPARAM and not using existing one c
 You can use DHPARAM_SETUP=1 only for testing server and destroy.
 
 ```
-#!shell
-
 #How to generate dhparam manually
 openssl dhparam -out /etc/nginx/ssl/dhparam.pem 4096
 ```
 
 ```
-#!shell
-
 DHPARAM_SETUP=2
 ```
