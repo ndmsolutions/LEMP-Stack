@@ -154,7 +154,7 @@ server {
 }
 
 server {
-        listen 443 ssl spdy;
+        listen 443 ssl http2;
         gzip off;
         server_name www.$DOMAIN $DOMAIN;
         root $DOMAIN_PATH/public_html;
@@ -166,6 +166,8 @@ server {
         ssl on;
         ssl_certificate /etc/nginx/ssl/webserver.pem;
         ssl_certificate_key /etc/nginx/ssl/webserver.key;
+        #ssl_trusted_certificate /etc/nginx/ssl/boundle.pem;
+        
         ssl_dhparam /etc/nginx/ssl/dhparam.pem;
         
         location / {
