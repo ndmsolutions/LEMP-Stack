@@ -5,7 +5,7 @@ source ./options.conf
 bold=$(tput bold)
 normal=$(tput sgr0)
 ROOT_UID=0
-passgen=$(openssl rand -base64 18)
+passgen=$(gpg --gen-random --armor 1 18)
 
 # Run as root, of course. (this might not be necessary, because we have to run the script somehow with root anyway)
 if [ "$UID" -ne "$ROOT_UID" ]
