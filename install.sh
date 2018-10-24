@@ -17,13 +17,12 @@ sleep 5
 ./setup.sh install
 
 echo ""
-echo "Optimizing AWStats, PHP, logrotate & webserver config."
+echo "Optimizing PHP, logrotate & webserver config."
 sleep 5
 ./setup.sh optimize
 
 echo ""
 echo "Installation complete!"
-echo "Root login disabled."
 echo "Please add a normal user now using the \"adduser\" command."
 echo "To Install FTP Server \"./setup.sh ftp\" command."
 echo "Please add a user with no login if installed FTP using the \"./add_domain_user.sh username\" command."

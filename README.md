@@ -43,9 +43,13 @@ chmod 700 *.sh
 chmod 700 options.conf
 ```
 
-Edit options to enter server IP, MySQL password, MySQL Version etc.
+Edit options to enter server IP, MySQL password etc.
 
 ```
+#To generate strong password for MySQL use:
+
+gpg --gen-random --armor 1 18
+
 nano options.conf
 ```
 
