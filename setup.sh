@@ -1,5 +1,5 @@
 ###############################################################################################
-# TuxLitePlus - Complete LAMP setup script for Ubuntu                                            #
+# LEMP Stack - Complete LEMP setup script for Ubuntu                                            #
 # Nginx + PHP7.2-FPM + MySQL                                                             #
 # Stack is optimized/tuned for a 256MB server                                                 #
 ###############################################################################################
@@ -218,6 +218,7 @@ function optimize_stack {
     sed -i 's/^post_max_size.*/post_max_size = '${PHP_POST_MAX_SIZE}'/' $php_ini_dir
     sed -i 's/^upload_max_filesize.*/upload_max_filesize = '${PHP_UPLOAD_MAX_FILESIZE}'/' $php_ini_dir
     sed -i 's/^expose_php.*/expose_php = Off/' $php_ini_dir
+    sed -i "s/; max_input_vars = 1000/max_input_vars = $PHP_MAX_INPUT_VARS/g" $php_ini_dir
     sed -i 's/\;cgi.fix_pathinfo.*/cgi.fix_pathinfo = 0/' $php_ini_dir
     sed -i 's/^disable_functions.*/disable_functions = exec,system,passthru,shell_exec,escapeshellarg,escapeshellcmd,proc_close,proc_open,dl,popen,show_source/' $php_ini_dir
 
@@ -257,11 +258,7 @@ function optimize_stack {
     echo "$GENERATE_CERT"
     aptitude -y purge expect
 
-    restart_webserver
-    sleep 2
-    /etc/init.d/php7.2-fpm start
-    sleep 2
-    /etc/init.d/php7.2-fpm restart
+    restart_services
     echo -e "\033[35;1m Optimize complete! \033[0m"
 
 } # End function optimize
@@ -317,9 +314,10 @@ function install_dbgui {
     apt autoremove -y
 }
 
-function restart_webserver {
+function restart_services {
         /etc/init.d/nginx restart
-} # End function restart_webserver
+        /etc/init.d/php7.2-fpm restart
+} # End function restart_services
 
 #### Main program begins ####
 
@@ -362,13 +360,12 @@ basic)
     basic_server_setup
     ;;
 install)
-    install_webserver
-    install_mysql
-    install_php
     install_extras
+    install_webserver
+    install_php
+    install_mysql
     install_postfix
-    restart_webserver
-    /etc/init.d/php7.2-fpm restart
+    restart_services
     echo -e "\033[35;1m Webserver + PHP-FPM + MySQL install complete! \033[0m"
     cat info_install.txt
     ;;

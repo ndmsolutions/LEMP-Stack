@@ -47,8 +47,7 @@ Edit options to enter server IP, MySQL password etc.
 
 ```
 #To generate strong password for MySQL use:
-
-gpg --gen-random --armor 1 18
+</dev/urandom tr -dc '123465!@^[]%q*JdueNhgSyHD]%q*ylIuj' | head -c18; echo ""
 
 nano options.conf
 ```
@@ -176,4 +175,22 @@ openssl dhparam -out /etc/nginx/ssl/dhparam.pem 4096
 
 ```
 DHPARAM_SETUP=2
+```
+
+Install Wordpress:
+
+```
+wget http://wordpress.org/latest.tar.gz
+tar xfz latest.tar.gz
+
+mv wordpress/* ./
+
+rmdir ./wordpress/
+rm -f latest.tar.gz
+
+# change "define('WP_MEMORY_LIMIT', '256M');" in wp-config.php
+
+#todo
+max_input_vars = 2000
+
 ```

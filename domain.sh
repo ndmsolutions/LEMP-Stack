@@ -115,58 +115,68 @@ EOF
     cat > $DOMAIN_CONFIG_PATH <<EOF
 server {
         listen 80;
-        #listen [::]:80 default ipv6only=on;
+
         server_name www.$DOMAIN $DOMAIN;
         root $DOMAIN_PATH/public_html;
         access_log $DOMAIN_PATH/logs/access.log;
         error_log $DOMAIN_PATH/logs/error.log;
+        
         index index.php index.html index.htm;
         error_page 404 /404.html;
+        
         location / {
             try_files \$uri \$uri/ /index.php?\$args;
         }
+        
         # Pass PHP scripts to PHP-FPM
         location ~ \.php$ {
             include snippets/fastcgi-php.conf;      
             fastcgi_pass unix:/var/run/php/php7.2-fpm-$DOMAIN_OWNER.sock;
         }
         
-        # Enable browser cache for CSS / JS
-        location ~* \.(?:css|js)$ {
-            expires 30d;
-            add_header Pragma "public";
-            add_header Cache-Control "public";
-            add_header Vary "Accept-Encoding";
-        }
-        # Enable browser cache for static files
-        location ~* \.(?:ico|jpg|jpeg|gif|png|bmp|webp|tiff|svg|svgz|pdf|mp3|flac|ogg|mid|midi|wav|mp4|webm|mkv|ogv|wmv|eot|otf|woff|ttf|rss|atom|zip|7z|tgz|gz|rar|bz2|tar|exe|doc|docx|xls|xlsx|ppt|pptx|rtf|odt|ods|odp)$ {
+        # Enable browser cache for CSS / JS / other
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
             expires 60d;
             add_header Pragma "public";
             add_header Cache-Control "public";
+            add_header Vary "Accept-Encoding";                
+            log_not_found off;
+            access_log off;
         }
+        
         # Deny access to hidden files
         location ~ (^|/)\. {
             deny all;
         }
+        
         # Prevent logging of favicon and robot request errors
-        location = /favicon.ico { log_not_found off; access_log off; }
-        location = /robots.txt  { log_not_found off; access_log off; }
+        location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+        }
+
+        location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+        }
 }
 
 server {
-        listen 443 ssl http2;
-        gzip off;
+        listen *:443 ssl http2;
+        listen [::]:443 ssl http2;
+
         server_name www.$DOMAIN $DOMAIN;
         root $DOMAIN_PATH/public_html;
         access_log $DOMAIN_PATH/logs/access.log;
         error_log $DOMAIN_PATH/logs/error.log;
+        
         index index.php index.html index.htm;
         error_page 404 /404.html;
 
         ssl on;
         ssl_certificate /etc/nginx/ssl/webserver.pem;
         ssl_certificate_key /etc/nginx/ssl/webserver.key;
-        #ssl_trusted_certificate /etc/nginx/ssl/boundle.pem;
         
         ssl_dhparam /etc/nginx/ssl/dhparam.pem;
         
@@ -179,19 +189,14 @@ server {
             fastcgi_pass unix:/var/run/php/php7.2-fpm-$DOMAIN_OWNER.sock;
         }
 
-        # Enable browser cache for CSS / JS
-        location ~* \.(?:css|js)$ {
-            expires 2d;
+        # Enable browser cache for CSS / JS / other
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+            expires 60d;
             add_header Pragma "public";
             add_header Cache-Control "public";
-            add_header Vary "Accept-Encoding";
-        }
-
-        # Enable browser cache for static files
-        location ~* \.(?:ico|jpg|jpeg|gif|png|bmp|webp|tiff|svg|svgz|pdf|mp3|flac|ogg|mid|midi|wav|mp4|webm|mkv|ogv|wmv|eot|otf|woff|ttf|rss|atom|zip|7z|tgz|gz|rar|bz2|tar|exe|doc|docx|xls|xlsx|ppt|pptx|rtf|odt|ods|odp)$ {
-            expires 5d;
-            add_header Pragma "public";
-            add_header Cache-Control "public";
+            add_header Vary "Accept-Encoding";                
+            log_not_found off;
+            access_log off;
         }
 
         # Deny access to hidden files
@@ -200,8 +205,16 @@ server {
         }
 
         # Prevent logging of favicon and robot request errors
-        location = /favicon.ico { log_not_found off; access_log off; }
-        location = /robots.txt  { log_not_found off; access_log off; }
+        location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+        }
+
+        location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+        }
 }
 EOF
 
